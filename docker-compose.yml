@@ -1,0 +1,14 @@
+services:
+  screening:
+    build: .
+    image: grid-n1-screening:latest
+    container_name: grid-n1-screening
+    ports:
+      - "8000:8000"
+    # 对应交付指标：2 核 / 1GiB 内 5 秒完成 100 母线 200 线路全量筛查
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 1G
+    restart: unless-stopped

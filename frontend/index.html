@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>输电网单线退出（N-1）风险筛查台</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>⚡ 输电网单线退出（N-1）风险筛查台</h1>
+  <p class="sub">DC 潮流 · 逐线最坏负载率 · 可复核注入见证 · 恰好达限不算越限</p>
+</header>
+
+<main>
+  <section class="card" id="input-card">
+    <div class="card-head">
+      <h2>电网数据输入</h2>
+      <div class="btn-row">
+        <button id="btn-sample" type="button">加载示例</button>
+        <label class="btn-file">上传 JSON
+          <input type="file" id="file-input" accept=".json,application/json" hidden>
+        </label>
+        <button id="btn-run" class="primary" type="button">开始筛查</button>
+      </div>
+    </div>
+    <textarea id="grid-input" spellcheck="false"
+      placeholder='{"buses":[{"id":"B1","p_min":-100,"p_max":150},...],"lines":[{"id":"L1","from":"B1","to":"B2","x":0.1,"limit":50},...]}'></textarea>
+    <div id="input-errors" class="errors hidden"></div>
+  </section>
+
+  <section class="card hidden" id="summary-card">
+    <h2>筛查结果概览</h2>
+    <div class="stats" id="summary-stats"></div>
+  </section>
+
+  <div class="hidden" id="results">
+    <section class="card" id="scenario-card">
+      <div class="card-head">
+        <h2>退出场景（逐线）</h2>
+        <div class="btn-row">
+          <button id="sort-risk" class="small" type="button">按风险 ↓</button>
+          <button id="sort-name" class="small" type="button">按线路 ID</button>
+        </div>
+      </div>
+      <div class="table-wrap tall">
+        <table id="scenario-table">
+          <thead><tr>
+            <th>#</th><th>退出线路</th><th>状态</th><th>岛数</th>
+            <th>最危险线路</th><th>最坏负载率</th><th>越限线路数</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" id="topo-card">
+      <h2>拓扑图 <span class="hint" id="topo-hint">（选择左侧场景后按最坏负载率着色）</span></h2>
+      <svg id="topo" role="img"></svg>
+      <div class="legend">
+        <span><i class="sw" style="background:#16a34a"></i>≤60%</span>
+        <span><i class="sw" style="background:#ca8a04"></i>60–85%</span>
+        <span><i class="sw" style="background:#ea580c"></i>85–100%</span>
+        <span><i class="sw" style="background:#dc2626"></i>越限 &gt;100%</span>
+        <span><i class="sw dashed"></i>退出线路</span>
+        <span><i class="sw" style="background:#1d4ed8"></i>选中线路</span>
+      </div>
+    </section>
+
+    <section class="card" id="detail-card">
+      <h2>场景详情 <span class="hint" id="detail-title">（未选择场景）</span></h2>
+      <div id="detail-body"><p class="muted">在左侧场景表中选择一行查看逐线最坏负载率。</p></div>
+    </section>
+
+    <section class="card" id="witness-card">
+      <h2>注入见证复核 <span class="hint" id="witness-title"></span></h2>
+      <div id="witness-body"><p class="muted">选择场景或线路后，此处展示达到最坏潮流的注入方案及独立复核结果。</p></div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <span>模型：B·θ = p，f = (θ起 − θ终)/x；每岛注入之和为零；在全部可行注入方案中求各线路最大 |潮流|。</span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

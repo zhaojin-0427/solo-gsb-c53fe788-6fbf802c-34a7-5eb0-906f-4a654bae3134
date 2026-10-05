@@ -1,0 +1,6 @@
+.git
+**/__pycache__
+**/*.pyc
+.pytest_cache
+backend/tests
+examples/case_100_200.json
